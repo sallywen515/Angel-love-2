@@ -18,70 +18,60 @@
         /* 全域字體設定 */
         body {
             font-family: "Varela Round", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
-            background-color: #D7CCC8; /* 外部背景色 */
-            overflow: hidden; /* 防止主視窗捲動 */
-            touch-action: manipulation; /* 優化觸控 */
+            background-color: #D7CCC8;
             margin: 0;
             padding: 0;
+            overflow: hidden; /* 防止主頁面捲動 */
+            touch-action: manipulation;
         }
 
-        /* 隱藏捲軸但允許捲動 */
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        /* 隱藏捲軸 */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* --- 動畫定義 --- */
+        /* 動畫定義 */
         @keyframes float-slow { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
         @keyframes pulse-slow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.05); } }
         @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
         @keyframes scale-up { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes blessing-bg { 0% { opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { opacity: 0; } }
         @keyframes beam { 0% { height: 0; opacity: 0; } 20% { height: 120vh; opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
-        @keyframes ping-slow { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(1.5); opacity: 0; } }
 
         .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
         .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
         .animate-spin-slow { animation: spin-slow 20s linear infinite; }
         .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
         .animate-scale-up { animation: scale-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-blessing-bg { animation: blessing-bg 3s ease-out forwards; }
         .animate-beam { animation: beam 3s ease-out forwards; }
-        .animate-ping-slow { animation: ping-slow 3s infinite; }
-        
+
         /* 轉盤旋轉過渡效果 */
         #wheel-container {
             transition: transform 3s cubic-bezier(0.1, 0.7, 0.1, 1);
         }
     </style>
 </head>
-<body class="flex justify-center min-h-screen">
+<body class="flex justify-center min-h-screen bg-[#D7CCC8]">
 
-    <!-- 手機版面模擬容器 -->
+    <!-- 主容器：限制寬度模擬手機 App -->
     <div class="w-full max-w-[430px] h-[100dvh] bg-[#EFEBE9] shadow-2xl relative flex flex-col overflow-y-auto overflow-x-hidden hide-scrollbar">
         
-        <!-- 背景裝飾層 -->
+        <!-- 背景裝飾 -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
             <div class="absolute top-[-10%] left-[-20%] w-[300px] h-[300px] bg-[#D1C4E9] rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
             <div class="absolute bottom-[10%] right-[-20%] w-[250px] h-[250px] bg-[#C8E6C9] rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
             <div class="absolute top-[40%] left-[60%] w-[200px] h-[200px] bg-[#FFCCBC] rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
-            <div class="absolute inset-0 opacity-[0.05]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')"></div>
         </div>
 
         <!-- 音效開關 (右上角) -->
-        <button id="sound-btn" class="absolute top-4 right-4 z-40 p-2 rounded-full bg-white/60 text-[#8D6E63] hover:bg-white transition-colors shadow-sm cursor-pointer">
+        <button id="sound-btn" class="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/60 text-[#8D6E63] hover:bg-white transition-colors shadow-sm cursor-pointer">
             <i data-lucide="volume-2" class="w-5 h-5" id="sound-icon-on"></i>
             <i data-lucide="volume-x" class="w-5 h-5 hidden" id="sound-icon-off"></i>
         </button>
 
-        <!-- 主內容區域 -->
-        <div class="relative z-10 flex flex-col items-center flex-grow pt-12 pb-8 px-4">
+        <!-- 內容區域 -->
+        <div class="relative z-10 flex flex-col items-center flex-grow pt-10 pb-8 px-4 w-full">
 
-            <!-- 天使插圖 -->
+            <!-- 1. 天使插圖 -->
             <div class="relative mb-4 animate-float-slow z-20 shrink-0">
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white/50 blur-2xl rounded-full"></div>
                 <svg width="120" height="120" viewBox="0 0 100 100" class="drop-shadow-md">
@@ -102,8 +92,8 @@
                 </svg>
             </div>
 
-            <!-- 標題 -->
-            <div class="text-center mb-6 relative z-10 shrink-0">
+            <!-- 2. 標題 -->
+            <div class="text-center mb-4 relative z-10 shrink-0">
                 <h1 class="text-3xl font-bold tracking-wider text-[#5D4037] drop-shadow-sm mb-2 transform -rotate-1">
                     心靈療癒轉盤
                 </h1>
@@ -113,10 +103,10 @@
                 </p>
             </div>
 
-            <!-- 轉盤主體 -->
-            <div class="relative mt-2 mb-auto z-30 shrink-0" style="width: 300px; height: 300px; min-width: 300px; min-height: 300px;">
+            <!-- 3. 轉盤主體 (設定固定大小，確保不會消失) -->
+            <div class="relative z-30 shrink-0 mb-6" style="width: 300px; height: 300px;">
                 <!-- 上方指針 -->
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-6 z-40 filter drop-shadow-md" style="width: 36px; height: 54px;">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-5 z-40 filter drop-shadow-md pointer-events-none" style="width: 36px; height: 54px;">
                     <svg width="36" height="54" viewBox="0 0 40 60">
                         <path d="M20 60 L18 20 L22 20 Z" fill="#8D6E63" />
                         <path d="M20 20 L5 5 L20 0 L35 5 Z" fill="#FFF" stroke="#8D6E63" stroke-width="2"/>
@@ -124,21 +114,21 @@
                     </svg>
                 </div>
 
-                <!-- 旋轉圓盤容器 -->
-                <div id="wheel-container" class="w-full h-full rounded-full border-[6px] border-[#EFEBE9] shadow-xl bg-[#EFEBE9] relative overflow-hidden box-border" style="width: 100%; height: 100%; position: relative;">
-                    <svg id="wheel-svg" viewBox="0 0 100 100" class="w-full h-full" style="width: 100%; height: 100%; display: block;">
+                <!-- 圓盤容器 -->
+                <div id="wheel-container" class="w-full h-full rounded-full border-[6px] border-[#EFEBE9] shadow-xl bg-[#EFEBE9] relative overflow-hidden box-border">
+                    <svg id="wheel-svg" viewBox="0 0 100 100" class="w-full h-full block">
                         <!-- JS 將會在這裡生成扇形 -->
                     </svg>
                     
                     <!-- 中心裝飾 -->
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-[#FFF] rounded-full flex items-center justify-center shadow-inner z-10 border-4 border-[#D7CCC8]" style="position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; transform: translate(-50%, -50%);">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-[#FFF] rounded-full flex items-center justify-center shadow-inner z-10 border-4 border-[#D7CCC8]">
                          <i data-lucide="smile" class="w-7 h-7 text-[#8D6E63] animate-bounce-slow"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- 啟動按鈕 -->
-            <button id="spin-btn" class="mt-8 px-8 py-3 rounded-full border-2 border-[#BCAAA4] text-[#5D4037] bg-[#EFEBE9] font-bold text-base shadow-[0_4px_0_#A1887F] hover:translate-y-1 hover:shadow-none transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden flex items-center gap-2 cursor-pointer z-30 shrink-0">
+            <!-- 4. 啟動按鈕 -->
+            <button id="spin-btn" class="px-8 py-3 rounded-full border-2 border-[#BCAAA4] text-[#5D4037] bg-[#EFEBE9] font-bold text-base shadow-[0_4px_0_#A1887F] hover:translate-y-1 hover:shadow-none transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden flex items-center justify-center gap-2 cursor-pointer z-30 shrink-0 min-w-[200px]">
                 <span class="flex items-center gap-2" id="btn-text-idle">
                     <i data-lucide="star" class="w-5 h-5 text-[#8D6E63]"></i>
                     啟動轉盤
@@ -150,13 +140,20 @@
                 </span>
             </button>
 
-            <!-- 頁尾署名 -->
-            <div class="mt-8 text-center pb-4 w-full z-10 shrink-0">
+            <!-- 5. 加入的圖片區塊 (QR Code) -->
+            <div class="mt-6 mb-2 z-30 shrink-0 flex flex-col items-center animate-fade-in">
+                <p class="text-[#8D6E63] text-sm font-bold mb-2 tracking-widest">
+                    ▼ 掃描加入我們 ▼
+                </p>
+                <!-- 圖片檔名已更新為 1000029943.jpg -->
+                <img src="1000029943.jpg" alt="掃描加入" class="w-32 h-32 rounded-xl shadow-md border-2 border-white/50 object-cover bg-white hover:scale-105 transition-transform duration-300">
+            </div>
+
+            <!-- 6. 頁尾 -->
+            <div class="mt-4 text-center pb-8 w-full z-10 shrink-0">
                 <div class="h-[1px] w-full bg-[#D7CCC8] mb-3 opacity-50"></div>
-                <p class="text-[#8D6E63] text-sm font-medium tracking-wide opacity-80 flex items-center justify-center gap-1">
-                    <span class="text-xs">✨</span> 
-                    天使之愛魔法樂生活團隊製作 
-                    <span class="text-xs">✨</span>
+                <p class="text-[#8D6E63] text-sm font-medium tracking-wide opacity-80">
+                    ✨ 天使之愛魔法樂生活團隊製作 ✨
                 </p>
             </div>
         </div>
@@ -205,11 +202,8 @@
         <div id="blessing-overlay" class="absolute inset-0 z-[60] flex items-center justify-center animate-blessing-bg overflow-hidden hidden pointer-events-none">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[4px] h-[150%] bg-white/90 animate-beam shadow-[0_0_30px_white]"></div>
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[60px] h-[150%] bg-gradient-to-b from-[#FFE0B2]/0 via-[#FFE0B2]/30 to-white/0 blur-xl"></div>
-            
             <div class="relative flex flex-col items-center justify-center z-10 animate-scale-up-gentle">
                 <div class="absolute w-[250px] h-[250px] border-4 border-[#FFE0B2]/60 rounded-full animate-ping-slow"></div>
-                <div class="absolute w-[180px] h-[180px] border-2 border-dashed border-white/80 rotate-45 animate-spin-slow"></div>
-                
                 <div class="bg-white px-6 py-3 border-4 border-[#FFCCBC] shadow-xl flex items-center gap-2 rounded-full transform rotate-1">
                     <span class="text-xl animate-bounce">🌱</span>
                     <span class="text-[#5D4037] text-lg font-bold tracking-wider">能量下載完成</span>
@@ -222,11 +216,9 @@
 
     <!-- JavaScript 邏輯 -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        // 放在立即執行函數中，確保變數不污染全域
+        (function() {
             
-            // 嘗試初始化圖示
-            try { if(window.lucide) lucide.createIcons(); } catch(e) { console.log('Icons loading...'); }
-
             // 資料庫
             const affirmations = [
                 { id: 1, text: "我擁抱自己所有的面向，包含光明的與陰暗的。", action: "照著鏡子，看著自己的眼睛說三次：「我愛你，原本的樣子。」", color: "#BCAAA4" },
@@ -239,12 +231,6 @@
                 { id: 8, text: "我願意給予，也願意敞開心胸接受別人的愛與支持。", action: "傳訊息給一位朋友，告訴他：「謝謝你的存在。」", color: "#CE93D8" },
                 { id: 9, text: "我發出愛的頻率，也吸引愛的頻率來到我身邊。", action: "今晚洗澡時，想像金色的水流沖刷全身，充滿愛的能量。", color: "#B0BEC5" }
             ];
-
-            // 變數
-            let isSpinning = false;
-            let rotation = 0;
-            let soundEnabled = true;
-            let audioContext = null;
 
             // DOM 元素
             const wheelSvg = document.getElementById('wheel-svg');
@@ -261,9 +247,14 @@
             const soundIconOn = document.getElementById('sound-icon-on');
             const soundIconOff = document.getElementById('sound-icon-off');
 
-            // 繪製轉盤 (關鍵邏輯)
+            // 音效上下文
+            let audioContext = null;
+            let soundEnabled = true;
+            let isSpinning = false;
+            let rotation = 0;
+
+            // --- 1. 繪製轉盤 (最優先執行) ---
             const segmentAngle = 360 / 9;
-            
             function getSectorPath(index) {
                 const startAngle = index * segmentAngle - 90 - (segmentAngle/2);
                 const endAngle = (index + 1) * segmentAngle - 90 - (segmentAngle/2);
@@ -276,7 +267,6 @@
                 return `M50,50 L${x1},${y1} A50,50 0 0,1 ${x2},${y2} Z`;
             }
 
-            // 生成扇形
             if(wheelSvg) {
                 affirmations.forEach((item, index) => {
                     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
@@ -287,7 +277,6 @@
                     path.setAttribute("stroke-width", "1.5");
                     g.appendChild(path);
 
-                    // 文字
                     const angle = (index * segmentAngle) - 90;
                     const rad = (angle * Math.PI) / 180;
                     const textX = 50 + 38 * Math.cos(rad);
@@ -304,12 +293,14 @@
                     text.setAttribute("style", "text-shadow: 1px 1px 0px rgba(0,0,0,0.1); font-family: 'Varela Round', sans-serif;");
                     text.textContent = item.id;
                     g.appendChild(text);
-
                     wheelSvg.appendChild(g);
                 });
             }
 
-            // --- 音效功能 (修復版) ---
+            // --- 2. 初始化圖示 ---
+            if(window.lucide) { lucide.createIcons(); }
+
+            // --- 3. 音效處理 ---
             function initAudio() {
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -319,152 +310,37 @@
                 }
             }
 
-            // 強制喚醒：只要使用者點擊頁面任何地方，就喚醒音效引擎
-            document.body.addEventListener('click', () => {
-                initAudio();
-            }, { once: true }); // 只執行一次
+            // 監聽全域點擊以解鎖音效 (解決手機瀏覽器限制)
+            document.body.addEventListener('click', initAudio, { once: true });
+            document.body.addEventListener('touchstart', initAudio, { once: true });
 
-            function playTickSound() {
+            function playSound(type) {
                 if (!soundEnabled || !audioContext) return;
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(800, audioContext.currentTime); // 提高頻率比較清脆
-                osc.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.05);
-                
-                // 提高音量到 0.3
-                gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
-                
-                osc.start();
-                osc.stop(audioContext.currentTime + 0.05);
-            }
-
-            function playWinSound() {
-                if (!soundEnabled || !audioContext) return;
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, audioContext.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1);
-                
-                // 提高音量到 0.5
-                gain.gain.setValueAtTime(0.5, audioContext.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1);
-                
-                osc.start();
-                osc.stop(audioContext.currentTime + 1);
-            }
-
-            function playBlessingSound() {
-                if (!soundEnabled || !audioContext) return;
-                const notes = [440, 554, 659, 880];
-                notes.forEach((freq, i) => {
+                try {
                     const osc = audioContext.createOscillator();
                     const gain = audioContext.createGain();
                     osc.connect(gain);
                     gain.connect(audioContext.destination);
-                    osc.type = 'sine';
-                    osc.frequency.value = freq;
+
+                    const now = audioContext.currentTime;
                     
-                    // 提高音量到 0.2 (和弦會疊加，不能太高)
-                    gain.gain.setValueAtTime(0, audioContext.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.1 + i * 0.05);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 2);
-                    
-                    osc.start(audioContext.currentTime + i * 0.05);
-                    osc.stop(audioContext.currentTime + 2.5);
-                });
-            }
-
-            // 轉盤互動
-            spinBtn.addEventListener('click', () => {
-                if (isSpinning) return;
-                initAudio(); // 再次確保音效引擎啟動
-                
-                isSpinning = true;
-                spinBtn.disabled = true;
-                if(btnTextIdle) btnTextIdle.classList.add('hidden');
-                if(btnTextSpinning) btnTextSpinning.classList.remove('hidden');
-                if(resultModal) resultModal.classList.add('hidden');
-
-                const randomSpin = Math.floor(Math.random() * 360);
-                const newRotation = rotation + 1800 + randomSpin;
-                
-                // 模擬轉動音效
-                let count = 0;
-                const totalTicks = 30;
-                const playSequence = () => {
-                    if (count >= totalTicks) return;
-                    playTickSound();
-                    const progress = count / totalTicks;
-                    const nextDelay = 50 + (progress * progress * 200);
-                    count++;
-                    setTimeout(playSequence, nextDelay);
-                };
-                playSequence();
-
-                if(wheelContainer) {
-                    wheelContainer.style.transform = `rotate(${newRotation}deg)`;
-                }
-                rotation = newRotation;
-
-                setTimeout(() => {
-                    isSpinning = false;
-                    spinBtn.disabled = false;
-                    if(btnTextIdle) btnTextIdle.classList.remove('hidden');
-                    if(btnTextSpinning) btnTextSpinning.classList.add('hidden');
-                    
-                    playWinSound();
-                    calculateResult(newRotation);
-                }, 3000);
-            });
-
-            function calculateResult(finalRotation) {
-                const normalizedRotation = finalRotation % 360;
-                const winningIndex = Math.floor(((360 - (normalizedRotation % 360)) / segmentAngle)) % 9;
-                const result = affirmations[winningIndex];
-                
-                if(modalText) modalText.textContent = `「${result.text}」`;
-                if(modalAction) modalAction.textContent = result.action;
-                if(resultModal) resultModal.classList.remove('hidden');
-            }
-
-            blessingBtn.addEventListener('click', () => {
-                initAudio();
-                playBlessingSound();
-                if(blessingOverlay) {
-                    blessingOverlay.classList.remove('hidden');
-                    blessingOverlay.style.pointerEvents = "auto"; 
-                }
-                
-                setTimeout(() => {
-                    if(blessingOverlay) {
-                        blessingOverlay.classList.add('hidden');
-                        blessingOverlay.style.pointerEvents = "none";
-                    }
-                    if(resultModal) resultModal.classList.add('hidden');
-                }, 3000);
-            });
-
-            soundBtn.addEventListener('click', () => {
-                initAudio();
-                soundEnabled = !soundEnabled;
-                if(soundEnabled) {
-                    soundIconOn.classList.remove('hidden');
-                    soundIconOff.classList.add('hidden');
-                } else {
-                    soundIconOn.classList.add('hidden');
-                    soundIconOff.classList.remove('hidden');
-                }
-            });
-        });
-    </script>
-</body>
-</html>
-
-
+                    if (type === 'tick') {
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(800, now);
+                        osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+                        gain.gain.setValueAtTime(0.3, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                        osc.start(now);
+                        osc.stop(now + 0.05);
+                    } else if (type === 'win') {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(800, now);
+                        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                        gain.gain.setValueAtTime(0.5, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 1);
+                        osc.start(now);
+                        osc.stop(now + 1);
+                    } else if (type === 'blessing') {
+                        const notes = [440, 554, 659, 880];
+                        notes.forEach((freq, i) => {
+                            const o = audioContext.creat
