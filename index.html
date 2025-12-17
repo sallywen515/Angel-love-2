@@ -343,4 +343,97 @@
                     } else if (type === 'blessing') {
                         const notes = [440, 554, 659, 880];
                         notes.forEach((freq, i) => {
-                            const o = audioContext.creat
+                            const o = audioContext.createOscillator();
+                            const g = audioContext.createGain();
+                            o.connect(g);
+                            g.connect(audioContext.destination);
+                            o.type = 'sine';
+                            o.frequency.value = freq;
+                            g.gain.setValueAtTime(0, now);
+                            g.gain.linearRampToValueAtTime(0.2, now + 0.1 + i * 0.05);
+                            g.gain.exponentialRampToValueAtTime(0.001, now + 2);
+                            o.start(now + i * 0.05);
+                            o.stop(now + 2.5);
+                        });
+                    }
+                } catch(e) { console.error("Audio error", e); }
+            }
+
+            // --- 4. 按鈕互動 ---
+            spinBtn.addEventListener('click', () => {
+                if (isSpinning) return;
+                initAudio(); // 確保音效啟動
+                
+                isSpinning = true;
+                spinBtn.disabled = true;
+                btnTextIdle.classList.add('hidden');
+                btnTextSpinning.classList.remove('hidden');
+                resultModal.classList.add('hidden');
+
+                const randomSpin = Math.floor(Math.random() * 360);
+                const newRotation = rotation + 1800 + randomSpin;
+                
+                // 轉動音效
+                let count = 0;
+                const totalTicks = 30;
+                const playSequence = () => {
+                    if (count >= totalTicks) return;
+                    playSound('tick');
+                    const progress = count / totalTicks;
+                    const nextDelay = 50 + (progress * progress * 200);
+                    count++;
+                    setTimeout(playSequence, nextDelay);
+                };
+                playSequence();
+
+                // 執行旋轉
+                wheelContainer.style.transform = `rotate(${newRotation}deg)`;
+                rotation = newRotation;
+
+                setTimeout(() => {
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+                    btnTextIdle.classList.remove('hidden');
+                    btnTextSpinning.classList.add('hidden');
+                    
+                    playSound('win');
+                    
+                    // 計算結果
+                    const normalizedRotation = finalRotation = newRotation % 360;
+                    const winningIndex = Math.floor(((360 - normalizedRotation) / segmentAngle)) % 9;
+                    const result = affirmations[winningIndex];
+                    
+                    modalText.textContent = `「${result.text}」`;
+                    modalAction.textContent = result.action;
+                    resultModal.classList.remove('hidden');
+                }, 3000);
+            });
+
+            blessingBtn.addEventListener('click', () => {
+                initAudio();
+                playSound('blessing');
+                blessingOverlay.classList.remove('hidden');
+                setTimeout(() => {
+                    blessingOverlay.classList.add('hidden');
+                    resultModal.classList.add('hidden');
+                }, 3000);
+            });
+
+            soundBtn.addEventListener('click', () => {
+                initAudio();
+                soundEnabled = !soundEnabled;
+                if(soundEnabled) {
+                    soundIconOn.classList.remove('hidden');
+                    soundIconOff.classList.add('hidden');
+                } else {
+                    soundIconOn.classList.add('hidden');
+                    soundIconOff.classList.remove('hidden');
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>
+
+
