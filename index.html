@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>心靈療癒轉盤 | 天使之愛魔法樂生活團隊</title>
+    
+    <!-- 1. 引入 Tailwind CSS (樣式庫) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. 引入 Google Fonts (可愛字體) -->
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    
+    <!-- 3. 引入 Lucide Icons (圖示庫) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* 全域字體設定 */
+        body {
+            font-family: "Varela Round", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
+            background-color: #D7CCC8; /* 外部背景色 */
+            overflow: hidden; /* 防止主視窗捲動 */
+            touch-action: manipulation; /* 優化觸控 */
+        }
+
+        /* 隱藏捲軸但允許捲動 (美觀) */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* --- 動畫關鍵影格定義 --- */
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scale-up {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes blessing-bg {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        @keyframes beam {
+            0% { height: 0; opacity: 0; }
+            20% { height: 120vh; opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        @keyframes ping-slow {
+            0% { transform: scale(0.8); opacity: 0.6; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* --- 實用動畫類別 --- */
+        .animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+        .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+        .animate-bounce-slow { animation: bounce-slow 2s infinite; }
+        .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+        .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
+        .animate-scale-up { animation: scale-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-blessing-bg { animation: blessing-bg 3s ease-out forwards; }
+        .animate-beam { animation: beam 3s ease-out forwards; }
+        .animate-ping-slow { animation: ping-slow 3s infinite; }
+        
+        /* 轉盤旋轉過渡效果 (3秒緩動) */
+        #wheel-container {
+            transition: transform 3s cubic-bezier(0.1, 0.7, 0.1, 1);
+        }
+    </style>
+</head>
+<body class="flex justify-center min-h-screen">
+
+    <!-- 手機版面模擬容器 (限制寬度 430px) -->
+    <div class="w-full max-w-[430px] h-[100dvh] bg-[#EFEBE9] shadow-2xl relative flex flex-col overflow-y-auto overflow-x-hidden hide-scrollbar">
+        
+        <!-- 背景裝飾層 (絕對定位) -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <!-- 莫蘭迪色暈染 -->
+            <div class="absolute top-[-10%] left-[-20%] w-[300px] h-[300px] bg-[#D1C4E9] rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+            <div class="absolute bottom-[10%] right-[-20%] w-[250px] h-[250px] bg-[#C8E6C9] rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+            <div class="absolute top-[40%] left-[60%] w-[200px] h-[200px] bg-[#FFCCBC] rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+            <!-- 噪點紋理 -->
+            <div class="absolute inset-0 opacity-[0.05]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')"></div>
+        </div>
+
+        <!-- 音效開關按鈕 (右上角) -->
+        <button id="sound-btn" class="absolute top-4 right-4 z-30 p-2 rounded-full bg-white/60 text-[#8D6E63] hover:bg-white transition-colors shadow-sm">
+            <i data-lucide="volume-2" class="w-5 h-5" id="sound-icon-on"></i>
+            <i data-lucide="volume-x" class="w-5 h-5 hidden" id="sound-icon-off"></i>
+        </button>
+
+        <!-- 主內容區域 -->
+        <div class="relative z-10 flex flex-col items-center flex-grow pt-12 pb-8 px-4">
+
+            <!-- 天使插圖 (SVG) -->
+            <div class="relative mb-6 animate-float-slow z-20">
+                <!-- 背後光暈 -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white/50 blur-2xl rounded-full"></div>
+                <!-- 天使圖案 -->
+                <svg width="120" height="120" viewBox="0 0 100 100" class="drop-shadow-md">
+                    <!-- 翅膀 -->
+                    <path d="M25 40 Q10 25 15 55 Q25 55 35 48" fill="#F5F5F5" stroke="#D7CCC8" stroke-width="1"/>
+                    <path d="M75 40 Q90 25 85 55 Q75 55 65 48" fill="#F5F5F5" stroke="#D7CCC8" stroke-width="1"/>
+                    <!-- 身體 -->
+                    <path d="M35 50 Q30 90 25 95 L75 95 Q70 90 65 50 Z" fill="#FCE4EC" />
+                    <!-- 臉與頭髮 -->
+                    <circle cx="50" cy="38" r="14" fill="#FFE0B2" />
+                    <path d="M35 38 Q35 15 50 15 Q65 15 65 38" fill="#A1887F" stroke="#A1887F" stroke-width="5" stroke-linecap="round" />
+                    <circle cx="35" cy="38" r="3" fill="#A1887F" />
+                    <circle cx="65" cy="38" r="3" fill="#A1887F" />
+                    <!-- 光環 -->
+                    <ellipse cx="50" cy="20" rx="15" ry="5" fill="none" stroke="#FFE082" stroke-width="3" class="animate-pulse-slow" />
+                    <!-- 表情 -->
+                    <path d="M43 40 Q46 43 49 40" fill="none" stroke="#5D4037" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M51 40 Q54 43 57 40" fill="none" stroke="#5D4037" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M48 46 Q50 48 52 46" fill="none" stroke="#EF9A9A" stroke-width="1.5" stroke-linecap="round" />
+                    <!-- 腮紅 -->
+                    <circle cx="41" cy="45" r="2.5" fill="#EF9A9A" opacity="0.6"/>
+                    <circle cx="59" cy="45" r="2.5" fill="#EF9A9A" opacity="0.6"/>
+                    <!-- 祈禱的手 -->
+                    <circle cx="50" cy="60" r="5" fill="#FFE0B2" />
+                </svg>
+            </div>
+
+            <!-- 標題 -->
+            <div class="text-center mb-6 relative z-10">
+                <h1 class="text-3xl font-bold tracking-wider text-[#5D4037] drop-shadow-sm mb-2 transform -rotate-1">
+                    心靈療癒轉盤
+                </h1>
+                <div class="h-[3px] w-20 bg-[#8D6E63]/30 mx-auto mb-2 rounded-full"></div>
+                <p class="text-[#795548] text-base tracking-widest font-medium">
+                    來自宇宙的溫柔提醒
+                </p>
+            </div>
+
+            <!-- 轉盤主體 (適應手機寬度) -->
+            <div class="relative w-72 h-72 sm:w-80 sm:h-80 mt-2 mb-auto">
+                <!-- 上方指針 -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-6 z-20 filter drop-shadow-md">
+                    <svg width="36" height="54" viewBox="0 0 40 60">
+                        <path d="M20 60 L18 20 L22 20 Z" fill="#8D6E63" />
+                        <path d="M20 20 L5 5 L20 0 L35 5 Z" fill="#FFF" stroke="#8D6E63" stroke-width="2"/>
+                        <circle cx="20" cy="10" r="4" fill="#8D6E63" class="animate-pulse-slow"/>
+                    </svg>
+                </div>
+
+                <!-- 旋轉圓盤容器 -->
+                <div id="wheel-container" class="w-full h-full rounded-full border-[6px] border-[#EFEBE9] shadow-xl bg-[#EFEBE9] relative overflow-hidden box-border">
+                    <svg id="wheel-svg" viewBox="0 0 100 100" class="w-full h-full">
+                        <!-- 透過 JS 動態生成扇形 -->
+                    </svg>
+                    
+                    <!-- 中心裝飾 (小花) -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-[#FFF] rounded-full flex items-center justify-center shadow-inner z-10 border-4 border-[#D7CCC8]">
+                         <i data-lucide="smile" class="w-7 h-7 text-[#8D6E63] animate-bounce-slow"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 啟動按鈕 -->
+            <button id="spin-btn" class="mt-8 px-8 py-3 rounded-full border-2 border-[#BCAAA4] text-[#5D4037] bg-[#EFEBE9] font-bold text-base shadow-[0_4px_0_#A1887F] hover:translate-y-1 hover:shadow-none transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden flex items-center gap-2">
+                <!-- 靜止狀態文字 -->
+                <span class="flex items-center gap-2" id="btn-text-idle">
+                    <i data-lucide="star" class="w-5 h-5 text-[#8D6E63]"></i>
+                    啟動轉盤
+                    <i data-lucide="star" class="w-5 h-5 text-[#8D6E63]"></i>
+                </span>
+                <!-- 旋轉狀態文字 -->
+                <span class="flex items-center gap-2 hidden" id="btn-text-spinning">
+                    <i data-lucide="sparkles" class="w-5 h-5 animate-spin text-[#8D6E63]"></i>
+                    連結中...
+                </span>
+            </button>
+
+            <!-- 頁尾署名 -->
+            <div class="mt-8 text-center pb-4 w-full">
+                <div class="h-[1px] w-full bg-[#D7CCC8] mb-3 opacity-50"></div>
+                <p class="text-[#8D6E63] text-sm font-medium tracking-wide opacity-80 flex items-center justify-center gap-1">
+                    <span class="text-xs">✨</span> 
+                    天使之愛魔法樂生活團隊製作 
+                    <span class="text-xs">✨</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- 結果彈窗 Modal -->
+        <div id="result-modal" class="absolute inset-0 z-40 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in hidden">
+            <div class="bg-[#FFF] rounded-[2rem] p-5 w-full max-w-[320px] shadow-2xl relative border-[5px] border-[#D7CCC8] transform transition-all animate-scale-up flex flex-col max-h-[85vh] overflow-y-auto hide-scrollbar">
+                
+                <div class="text-center">
+                    <div class="bg-[#D7CCC8] text-white inline-block px-5 py-1.5 rounded-full text-sm font-bold mb-4 shadow-sm">
+                        ✨ 宇宙訊息已接收 ✨
+                    </div>
+                    
+                    <!-- 肯定語區塊 -->
+                    <div class="mb-4 relative p-4 bg-[#F5F5F5] rounded-xl border-2 border-[#E0E0E0]">
+                        <p id="modal-text" class="text-lg font-bold leading-relaxed text-[#5D4037]">
+                            <!-- JS 填入內容 -->
+                        </p>
+                    </div>
+
+                    <!-- 分隔線 -->
+                    <div class="flex items-center gap-2 justify-center mb-4 opacity-50">
+                        <div class="h-[1px] w-8 bg-[#8D6E63]"></div>
+                        <div class="text-[#8D6E63] text-xs">✦</div>
+                        <div class="h-[1px] w-8 bg-[#8D6E63]"></div>
+                    </div>
+
+                    <!-- 行動建議區塊 -->
+                    <div class="text-left bg-[#EFEBE9] p-4 rounded-xl border-2 border-[#D7CCC8] mb-6 relative overflow-hidden">
+                        <div class="flex items-center gap-2 mb-2 text-[#5D4037] font-bold text-sm">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-[#8D6E63]"></i>
+                            <span>今日小行動：</span>
+                        </div>
+                        <p id="modal-action" class="text-[#6D4C41] leading-relaxed font-medium text-sm">
+                            <!-- JS 填入內容 -->
+                        </p>
+                        <!-- 裝飾圖示 -->
+                        <i data-lucide="coffee" class="absolute bottom-[-5px] right-[-5px] w-10 h-10 text-[#D7CCC8] opacity-30 rotate-12"></i>
+                    </div>
+
+                    <!-- 領取祝福按鈕 -->
+                    <button id="blessing-btn" class="w-full py-3 rounded-xl bg-[#8D6E63] text-white font-bold text-base shadow-[0_4px_0_#5D4037] hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-2 group">
+                        <i data-lucide="heart" class="w-5 h-5 fill-current text-[#FFCCBC] group-hover:scale-125 transition-transform"></i>
+                        我願意嘗試
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 祝福特效 (全螢幕覆蓋) -->
+        <div id="blessing-overlay" class="absolute inset-0 z-50 flex items-center justify-center animate-blessing-bg overflow-hidden rounded-[0px] hidden">
+            <!-- 光柱動畫 -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[4px] h-[150%] bg-white/90 animate-beam shadow-[0_0_30px_white]"></div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[60px] h-[150%] bg-gradient-to-b from-[#FFE0B2]/0 via-[#FFE0B2]/30 to-white/0 blur-xl"></div>
+            
+            <div class="relative flex flex-col items-center justify-center z-10 animate-scale-up-gentle">
+                <!-- 光環動畫 -->
+                <div class="absolute w-[250px] h-[250px] border-4 border-[#FFE0B2]/60 rounded-full animate-ping-slow"></div>
+                <div class="absolute w-[180px] h-[180px] border-2 border-dashed border-white/80 rotate-45 animate-spin-slow"></div>
+                
+                <!-- 提示文字 -->
+                <div class="bg-white px-6 py-3 border-4 border-[#FFCCBC] shadow-xl flex items-center gap-2 rounded-full transform rotate-1">
+                    <span class="text-xl animate-bounce">🌱</span>
+                    <span class="text-[#5D4037] text-lg font-bold tracking-wider">
+                        能量下載完成
+                    </span>
+                    <span class="text-xl animate-bounce" style="animation-delay: 0.1s;">🕊️</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript 邏輯 -->
+    <script>
+        // 1. 初始化 Lucide 圖示
+        lucide.createIcons();
+
+        // 2. 資料庫 (肯定語 + 行動 + 莫蘭迪配色)
+        const affirmations = [
+            { id: 1, text: "我擁抱自己所有的面向，包含光明的與陰暗的。", action: "照著鏡子，看著自己的眼睛說三次：「我愛你，原本的樣子。」", color: "#BCAAA4" }, // 莫蘭迪棕
+            { id: 2, text: "我對自己有耐心，允許自己按照自己的步調成長。", action: "泡一杯熱茶或咖啡，強迫自己「發呆」5分鐘，什麼都不做。", color: "#A5D6A7" }, // 莫蘭迪綠
+            { id: 3, text: "我有能力跨越眼前的障礙，我比我想像的更勇敢。", action: "去做一件你拖延已久的小事（例如回一封信、整理一個抽屜）。", color: "#90CAF9" }, // 莫蘭迪藍
+            { id: 4, text: "我釋放對結果的執著，專注於過程中的學習與體驗。", action: "隨意畫一幅塗鴉，或者聽一首輕快的歌並跟著哼唱。", color: "#FFAB91" }, // 莫蘭迪橘
+            { id: 5, text: "我放下對過去的懊悔和對未來的擔憂，全然活在此刻。", action: "深呼吸，觀察並說出你現在眼前看到的3個顏色。", color: "#80CBC4" }, // 莫蘭迪青
+            { id: 6, text: "我信任宇宙的安排，一切發生在最完美的時間點。", action: "抬頭看看天空或窗外的樹，感謝大自然的支持。", color: "#FFE082" }, // 莫蘭迪黃
+            { id: 7, text: "我原諒自己和他人，讓愛在我們之間流動。", action: "寫下一個讓你糾結的人事物，然後把紙撕掉丟進垃圾桶。", color: "#EF9A9A" }, // 莫蘭迪紅
+            { id: 8, text: "我願意給予，也願意敞開心胸接受別人的愛與支持。", action: "傳訊息給一位朋友，告訴他：「謝謝你的存在。」", color: "#CE93D8" }, // 莫蘭迪紫
+            { id: 9, text: "我發出愛的頻率，也吸引愛的頻率來到我身邊。", action: "今晚洗澡時，想像金色的水流沖刷全身，充滿愛的能量。", color: "#B0BEC5" }  // 莫蘭迪灰
+        ];
+
+        // 3. 變數與 DOM 元素
+        let isSpinning = false;
+        let rotation = 0;
+        let soundEnabled = true;
+        let audioContext = null;
+
+        const wheelSvg = document.getElementById('wheel-svg');
+        const wheelContainer = document.getElementById('wheel-container');
+        const spinBtn = document.getElementById('spin-btn');
+        const btnTextIdle = document.getElementById('btn-text-idle');
+        const btnTextSpinning = document.getElementById('btn-text-spinning');
+        const resultModal = document.getElementById('result-modal');
+        const modalText = document.getElementById('modal-text');
+        const modalAction = document.getElementById('modal-action');
+        const blessingBtn = document.getElementById('blessing-btn');
+        const blessingOverlay = document.getElementById('blessing-overlay');
+        const soundBtn = document.getElementById('sound-btn');
+        const soundIconOn = document.getElementById('sound-icon-on');
+        const soundIconOff = document.getElementById('sound-icon-off');
+
+        // 4. 繪製轉盤 (SVG)
+        const segmentAngle = 360 / 9;
+        
+        // 計算扇形路徑的數學公式
+        function getSectorPath(index) {
+            const startAngle = index * segmentAngle - 90 - (segmentAngle/2);
+            const endAngle = (index + 1) * segmentAngle - 90 - (segmentAngle/2);
+            const startRad = (startAngle * Math.PI) / 180;
+            const endRad = (endAngle * Math.PI) / 180;
+            const x1 = 50 + 50 * Math.cos(startRad);
+            const y1 = 50 + 50 * Math.sin(startRad);
+            const x2 = 50 + 50 * Math.cos(endRad);
+            const y2 = 50 + 50 * Math.sin(endRad);
+            return `M50,50 L${x1},${y1} A50,50 0 0,1 ${x2},${y2} Z`;
+        }
+
+        // 動態生成 9 個扇形
+        affirmations.forEach((item, index) => {
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            
+            // 扇形區塊
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", getSectorPath(index));
+            path.setAttribute("fill", item.color);
+            path.setAttribute("stroke", "#FFF");
+            path.setAttribute("stroke-width", "1.5");
+            g.appendChild(path);
+
+            // 文字數字
+            const angle = (index * segmentAngle) - 90;
+            const rad = (angle * Math.PI) / 180;
+            const textX = 50 + 38 * Math.cos(rad);
+            const textY = 50 + 38 * Math.sin(rad);
+            
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", textX);
+            text.setAttribute("y", textY);
+            text.setAttribute("fill", "#FFF");
+            text.setAttribute("font-size", "9");
+            text.setAttribute("font-weight", "bold");
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("dominant-baseline", "middle");
+            text.setAttribute("transform", `rotate(${angle + 90}, ${textX}, ${textY})`);
+            // 套用可愛字體
+            text.setAttribute("style", "text-shadow: 1px 1px 0px rgba(0,0,0,0.1); font-family: 'Varela Round', sans-serif;");
+            text.textContent = item.id;
+            g.appendChild(text);
+
+            wheelSvg.appendChild(g);
+        });
+
+        // 5. 音效功能 (使用 Web Audio API，無需外部 mp3)
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+
+        // 短促的「搭」聲 (模擬機械轉動)
+        function playTickSound() {
+            if (!soundEnabled || !audioContext) return;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain);
+            gain.connect(audioContex
