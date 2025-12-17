@@ -140,17 +140,44 @@
                 </span>
             </button>
 
-            <!-- 5. 加入的圖片區塊 (QR Code) -->
-            <div class="mt-6 mb-2 z-30 shrink-0 flex flex-col items-center animate-fade-in">
-                <p class="text-[#8D6E63] text-sm font-bold mb-2 tracking-widest">
-                    ▼ 掃描加入我們 ▼
-                </p>
-                <!-- 圖片檔名已更新為 1000029943.jpg -->
-                <img src="1000029943.jpg" alt="掃描加入" class="w-32 h-32 rounded-xl shadow-md border-2 border-white/50 object-cover bg-white hover:scale-105 transition-transform duration-300">
+            <!-- 5. 加入連結與天使圖片 (更新部分) -->
+            <div class="mt-8 mb-4 z-30 shrink-0 flex flex-col items-center animate-fade-in w-full px-6">
+                <a href="https://reurl.cc/Abb823" target="_blank" class="w-full max-w-xs group bg-white/60 backdrop-blur-sm border-2 border-[#8D6E63]/30 rounded-xl p-3 flex flex-row items-center gap-4 hover:bg-white hover:border-[#8D6E63] hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer no-underline">
+                    
+                    <!-- 圖片容器 (天使SVG) -->
+                    <div class="relative w-16 h-16 shrink-0 bg-[#FFF] rounded-lg border border-[#8D6E63]/20 flex items-center justify-center overflow-hidden">
+                        <svg width="50" height="50" viewBox="0 0 100 100">
+                            <!-- 翅膀 -->
+                            <path d="M20 40 Q10 25 15 55 Q25 55 35 48" fill="#F5F5F5" stroke="#D7CCC8" stroke-width="1.5"/>
+                            <path d="M80 40 Q90 25 85 55 Q75 55 65 48" fill="#F5F5F5" stroke="#D7CCC8" stroke-width="1.5"/>
+                            <!-- 頭部 -->
+                            <circle cx="50" cy="40" r="18" fill="#FFE0B2" />
+                            <!-- 頭髮 -->
+                            <path d="M32 40 Q32 15 50 15 Q68 15 68 40" fill="#A1887F" stroke="#A1887F" stroke-width="4" stroke-linecap="round"/>
+                            <!-- 光環 -->
+                            <ellipse cx="50" cy="18" rx="15" ry="4" fill="none" stroke="#FFE082" stroke-width="3" />
+                            <!-- 笑臉 -->
+                            <path d="M42 42 Q45 45 48 42" fill="none" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M52 42 Q55 45 58 42" fill="none" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+                            <!-- 身體 -->
+                            <path d="M35 55 Q30 90 20 100 L80 100 Q70 90 65 55 Z" fill="#FCE4EC" />
+                        </svg>
+                    </div>
+                    
+                    <!-- 文字區域 -->
+                    <div class="flex flex-col items-start">
+                        <div class="text-[#8D6E63] font-bold text-sm mb-1 group-hover:text-[#5D4037]">
+                            ✨ 歡迎加入 ✨
+                        </div>
+                        <span class="text-[#6D4C41] font-bold text-sm tracking-wide border-b border-transparent group-hover:border-[#8D6E63] transition-colors leading-tight">
+                            天使之愛魔法樂生活
+                        </span>
+                    </div>
+                </a>
             </div>
 
             <!-- 6. 頁尾 -->
-            <div class="mt-4 text-center pb-8 w-full z-10 shrink-0">
+            <div class="mt-2 text-center pb-8 w-full z-10 shrink-0">
                 <div class="h-[1px] w-full bg-[#D7CCC8] mb-3 opacity-50"></div>
                 <p class="text-[#8D6E63] text-sm font-medium tracking-wide opacity-80">
                     ✨ 天使之愛魔法樂生活團隊製作 ✨
